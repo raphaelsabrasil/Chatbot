@@ -1,6 +1,7 @@
 from openai import OpenAI
 import streamlit as st 
 import os
+from streamlit_chat import message as msg 
 
 # Uso de senha com Variável de Ambiente
 client = OpenAI(
@@ -22,8 +23,8 @@ if "hst_conversa" not in st.session_state:
     st.session_state.hst_conversa = []
 
 pergunta = st.text_input("Digite a pergunta:")
-btn_enviar = st.button("Enviar pergunta")
-if btn_enviar:
+btn_enviar_msg = st.button("Enviar mensagem")
+if btn_enviar_msg:
     st.session_state.hst_conversa.append({"role": "user", "content": pergunta})
     retorno_openai = client.chat.completions.create(
         model = "gpt-4.1",
@@ -41,6 +42,6 @@ if btn_enviar:
 if len(st.session_state.hst_conversa) > 0:
     for i in range(len(st.session_state.hst_conversa)):
         if i % 2 == 0:
-            st.write("Você: " + st.session_state.hst_conversa[i]['content'])
+            msg("Você: " + st.session_state.hst_conversa[i]['content'], is_user=True)
         else:
-            st.write("Reposta IA: " + st.session_state.hst_conversa[i]['content'])
+            msg("Resposta IA: " + st.session_state.hst_conversa[i]['content'])
